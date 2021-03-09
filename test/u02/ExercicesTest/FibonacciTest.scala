@@ -2,7 +2,7 @@ package u02.ExercicesTest
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import u02.Exercises.Fibonacci.fib
+import u02.Exercises.Fibonacci.{fib, fib1}
 
 class FibonacciTest {
 
@@ -16,4 +16,16 @@ class FibonacciTest {
   @Test def testNegativeFibonacci() {
     assertEquals(-2, fib(-2))
   }
+
+  @Test def testFibonacciTailRecursion() {
+    assertEquals(0, fib1(0))
+    assertEquals(1, fib1(1))
+    assertEquals(8, fib1(6))
+    assertEquals(34, fib1(9))
+  }
+
+  @Test def testNegativeFibonacciTailRecursion() {
+    assertEquals(-2, fib1(-2))
+  }
+
 }
