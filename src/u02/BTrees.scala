@@ -8,21 +8,24 @@ object BTrees extends App {
     case class Leaf[A](value: A) extends Tree[A]
     case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
 
-    def size[A](t: Tree[A]): Int = t match {
-      case Branch(l, r) => size(l) + size(r)
-      case _ => 1
+    //br is the function that is going to handle the branch
+    //le is the function that is going to handle the leaf
+    def transform[A,B](t: Tree[A], br: (B,B)=>B, le: A=>B): B = t match {
+      case Branch(l,r) => br(transform(l,br,le), transform(r,br,le))
+      case Leaf(e) => le(e)
     }
 
-    def find[A](t: Tree[A], elem: A): Boolean = t match {
-      case Branch(l, r) => find(l, elem) || find (r,elem)
-      case Leaf(e) => e==elem
-    }
+    def size[A](t: Tree[A]): Int =
+      transform[A,Int](t, _+_, _=> 1)
 
-    def count[A](t: Tree[A], elem: A): Int = t match {
-      case Branch(l, r) => count(l, elem) + count(r,elem)
-      case Leaf(e) if (e==elem) => 1
-      case _ => 0
-    }
+    def find[A](t: Tree[A], elem: A): Boolean =
+      transform[A,Boolean](t, _||_, _==elem)
+
+    def count[A](t: Tree[A], elem: A): Int =
+      transform[A,Int](t, _+_,{
+        case a if a == elem => 1
+        case _ => 0
+      })
   }
 
   import Tree._
